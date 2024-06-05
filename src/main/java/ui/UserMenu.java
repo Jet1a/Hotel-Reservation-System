@@ -15,19 +15,19 @@ public class UserMenu {
 
     public static void printUserUI() {
         System.out.print("""
+                ********************************************
                 User Menu
                 --------------------------------------------
                 1. Customer Register
                 2. Account Register
                 3. See all Rooms
                 4. Reserve Room
-                5. See Bookings
+                5. Cancel Reservation
                 6. See all Bookings
                 7. Back to Main Menu
                 --------------------------------------------
-                Please select a number for the menu option:\n
+                Please select a number for the menu option:
                 """);
-
     }
 
     public void mainMenu() {
@@ -55,7 +55,7 @@ public class UserMenu {
                         reserveRoom();
                         break;
                     case '5':
-                        myReservation();
+                        cancelReservation();
                         break;
                     case '6':
                         allReservation();
@@ -78,9 +78,13 @@ public class UserMenu {
         System.out.print("Enter Name: ");
         String name = scanner.nextLine();
         Customer customer = service.registerCustomer(name);
-        System.out.println("Customer successfully registered.");
-        System.out.println("=================================");
-        System.out.println("Your CustomerID is: " + customer.getId());
+        if (customer != null) {
+            System.out.println("Customer successfully registered.");
+            System.out.println("=================================");
+            System.out.println("Your CustomerID is: " + customer.getId());
+        }else{
+            System.out.println("Error: Customer could not be registered.");
+        }
     }
 
     public void newAccount() {
@@ -92,7 +96,6 @@ public class UserMenu {
             System.out.println("Account not registered.");
         } else {
             System.out.println("Account successfully registered.");
-            System.out.println("Welcome " + account);
         }
     }
 
@@ -106,6 +109,16 @@ public class UserMenu {
             System.out.println("Reserved room " + roomNumber + " successfully.");
         } else {
             System.out.println("Reserved room " + roomNumber + " failed.");
+        }
+    }
+    public void cancelReservation() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter room number: ");
+        String roomNumber = scanner.nextLine();
+        if (service.cancelReservation(roomNumber)) {
+            System.out.println("Reservation has been cancelled.");
+        }else{
+            System.out.println("Reservation has not been cancelled.");
         }
     }
 

@@ -1,6 +1,8 @@
 package entities;
 
-public class Room {
+import java.io.Serializable;
+
+public class Room implements Serializable {
     private final String roomId;
     private final RoomType roomType;
     private double price;
@@ -33,13 +35,20 @@ public class Room {
         this.isAvailable = available;
     }
 
+    public String availableString(){
+        if(isAvailable){
+            return "Available";
+        }else{
+            return "Not Available";
+        }
+    }
     @Override
     public String toString() {
-        return "Room{" +
-                "roomId='" + roomId + '\'' +
-                ", roomType=" + roomType +
-                ", price=" + price +
-                ", isAvailable=" + isAvailable +
-                '}';
+        return "----------- Room -----------"
+                + "\nRoomId: " + roomId
+                + "\nRoomType: " + roomType
+                + "\nPrice: " + price
+                + "\nAvailable: " + availableString()
+                + "\n---------------------------";
     }
 }

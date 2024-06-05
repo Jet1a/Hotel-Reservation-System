@@ -90,9 +90,9 @@ public class HotelService {
         return true;
     }
 
-    public boolean cancelReservation(String id) {
-        if (id == null) return false;
-        bookingRepo.deleteBooking(id);
+    public boolean cancelReservation(String roomNumber) {
+        if (roomNumber == null) return false;
+        bookingRepo.deleteBooking(roomNumber);
         return true;
     }
 

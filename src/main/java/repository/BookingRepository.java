@@ -9,7 +9,7 @@ public interface BookingRepository {
 
     boolean updateBooking(Booking booking);
 
-    boolean deleteBooking(String id);
+    boolean deleteBooking(String roomNumber);
 
     Booking getBooking(String id);
 

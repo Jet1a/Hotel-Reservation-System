@@ -1,6 +1,10 @@
 package ui;
 
 import entities.Customer;
+import repository.file.AccountFileRepository;
+import repository.file.BookingFileRepository;
+import repository.file.CustomerFileRepository;
+import repository.file.RoomFileRepository;
 import repository.memory.AccountMemoryRepository;
 import repository.memory.BookingMemoryRepository;
 import repository.memory.CustomerMemoryRepository;
@@ -14,13 +18,21 @@ public class MainMenu {
     private UserMenu userMenu;
     private AdminMenu adminMenu;
 
-    public MainMenu() {
-        service = new HotelService(
-                new CustomerMemoryRepository(),
-                new AccountMemoryRepository(),
-                new RoomMemoryRepository(),
-                new BookingMemoryRepository()
-        );
+    public MainMenu(boolean fromFile) {
+        if (fromFile) {
+            service = new HotelService(
+                    new CustomerFileRepository(),
+                    new AccountFileRepository(),
+                    new RoomFileRepository(),
+                    new BookingFileRepository());
+        } else {
+            service = new HotelService(
+                    new CustomerMemoryRepository(),
+                    new AccountMemoryRepository(),
+                    new RoomMemoryRepository(),
+                    new BookingMemoryRepository()
+            );
+        }
         userMenu = new UserMenu(service);
         adminMenu = new AdminMenu(service);
     }
@@ -60,6 +72,7 @@ public class MainMenu {
 
     public void menuUI() {
         System.out.print("""
+                ********************************************
                 Welcome to Hotel Reservation System
                 --------------------------------------------
                 1. User Menu
@@ -68,7 +81,6 @@ public class MainMenu {
                 --------------------------------------------
                 Please select a number for the menu option:
                 """);
-
     }
 
     public void printUserUI() {

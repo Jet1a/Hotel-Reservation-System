@@ -52,6 +52,7 @@ public class AdminMenu {
 
     public void printAdminUI() {
         System.out.print("""
+                ********************************************
                 Admin Menu
                 --------------------------------------------
                 1. See all Customers
@@ -67,19 +68,19 @@ public class AdminMenu {
     private void addRoom() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Enter room number:");
+        System.out.print("Enter room number: ");
         String roomNumber = scanner.nextLine();
 
-        System.out.println("Enter price per night:");
+        System.out.print("Enter price per night: ");
         var roomPrice = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.println("Enter room type: 1 for single bed, 2 for double bed:");
+        System.out.print("Enter room type: 1 for single bed, 2 for double bed: ");
         var roomType = RoomType.fromString(scanner.nextLine());
 
         service.addRoom(new Room(roomNumber, roomType, roomPrice));
 
-        System.out.println("Would like to add another room? Y/N");
+        System.out.print("Would like to add another room? Y/N: ");
         addAnotherRoom();
     }
 

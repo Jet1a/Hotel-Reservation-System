@@ -1,6 +1,8 @@
 package entities;
 
-public class Customer {
+import java.io.Serializable;
+
+public class Customer implements Serializable {
     private final String id;
     private final String name;
 
@@ -19,6 +21,9 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "[ " + name + " id " + id + " ]";
+        return "----------- Customer -----------"
+                + "\nName: " + name
+                + "\nID: " + id
+                + "\n------------------------------";
     }
 }

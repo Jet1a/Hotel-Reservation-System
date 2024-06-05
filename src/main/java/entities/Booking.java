@@ -1,6 +1,8 @@
 package entities;
 
-public class Booking {
+import java.io.Serializable;
+
+public class Booking implements Serializable {
     private final Account account;
     private final Room room;
 
@@ -19,9 +21,9 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking{" +
-                "account=" + account +
-                ", room=" + room +
-                '}';
+        return "----------- Bookings -----------"
+                + "\n" + this.account.toString()
+                + "\n" + this.room.toString()
+                + "\n---------------------------------";
     }
 }

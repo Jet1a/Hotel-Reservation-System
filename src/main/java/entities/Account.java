@@ -1,6 +1,8 @@
 package entities;
 
-public class Account {
+import java.io.Serializable;
+
+public class Account implements Serializable {
     private final String accountId;
     private final String customerId;
 
@@ -19,8 +21,9 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account : [" + "accountId='" + accountId + '\'' +
-                ", customerId='" + customerId + '\'' +
-                '}';
+        return "----------- Accounts -----------"
+                + "\nAccount ID: " + accountId
+                + "\nCustomer ID: " + customerId
+        + "\n------------------------------";
     }
 }
