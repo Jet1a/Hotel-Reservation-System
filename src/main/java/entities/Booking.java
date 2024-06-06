@@ -1,5 +1,7 @@
 package entities;
 
+import error.ParameterException;
+
 import java.io.Serializable;
 
 public class Booking implements Serializable {
@@ -7,6 +9,7 @@ public class Booking implements Serializable {
     private final Room room;
 
     public Booking(Account account, Room room) {
+        if (account == null || room == null) throw new ParameterException("Account and room are null");
         this.account = account;
         this.room = room;
     }

@@ -1,5 +1,7 @@
 package entities;
 
+import error.ParameterException;
+
 import java.io.Serializable;
 
 public class Room implements Serializable {
@@ -9,6 +11,9 @@ public class Room implements Serializable {
     private boolean isAvailable;
 
     public Room(String roomId, RoomType roomType, double price) {
+        if (roomId == null || roomId.isEmpty() || roomType == null)
+            throw new ParameterException("Room id and type are required");
+        if (price <= 0) throw new ParameterException("Room price cannot be 0 or less than 0");
         this.roomId = roomId;
         this.roomType = roomType;
         this.price = price;
@@ -35,13 +40,14 @@ public class Room implements Serializable {
         this.isAvailable = available;
     }
 
-    public String availableString(){
-        if(isAvailable){
+    public String availableString() {
+        if (isAvailable) {
             return "Available";
-        }else{
+        } else {
             return "Not Available";
         }
     }
+
     @Override
     public String toString() {
         return "----------- Room -----------"

@@ -23,7 +23,7 @@ public class UserMenu {
                 3. See all Rooms
                 4. Reserve Room
                 5. Cancel Reservation
-                6. See all Bookings
+                6. See my Bookings
                 7. Back to Main Menu
                 --------------------------------------------
                 Please select a number for the menu option:
@@ -58,7 +58,7 @@ public class UserMenu {
                         cancelReservation();
                         break;
                     case '6':
-                        allReservation();
+                        myReservation();
                         break;
                     case '7':
                         exit = true;
@@ -70,7 +70,6 @@ public class UserMenu {
                 System.out.println("Error: Invalid action\n");
             }
         }
-
     }
 
     public void newCustomer() {
@@ -81,8 +80,8 @@ public class UserMenu {
         if (customer != null) {
             System.out.println("Customer successfully registered.");
             System.out.println("=================================");
-            System.out.println("Your CustomerID is: " + customer.getId());
-        }else{
+            System.out.println("Your Customer ID is: " + customer.getId());
+        } else {
             System.out.println("Error: Customer could not be registered.");
         }
     }
@@ -92,10 +91,12 @@ public class UserMenu {
         System.out.print("Enter ID: ");
         var id = scanner.nextLine();
         var account = service.registerAccount(id);
-        if (account == null) {
-            System.out.println("Account not registered.");
-        } else {
+        if (account != null) {
             System.out.println("Account successfully registered.");
+            System.out.println("=================================");
+            System.out.println("Your Account ID is: " + account.getAccountId());
+        } else {
+            System.out.println("Error: Account could not be registered.");
         }
     }
 
@@ -111,14 +112,15 @@ public class UserMenu {
             System.out.println("Reserved room " + roomNumber + " failed.");
         }
     }
+
     public void cancelReservation() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter room number: ");
         String roomNumber = scanner.nextLine();
         if (service.cancelReservation(roomNumber)) {
             System.out.println("Reservation has been cancelled.");
-        }else{
-            System.out.println("Reservation has not been cancelled.");
+        } else {
+            System.out.println("Not found a reservation.");
         }
     }
 
@@ -138,17 +140,12 @@ public class UserMenu {
         System.out.print("Enter Bookings ID: ");
         String id = scanner.nextLine();
         var booking = service.getBooking(id);
-        System.out.println(booking);
-    }
-
-    public void allReservation() {
-        var s = service.getAllBookings();
-        if (!s.isEmpty()) {
-            for (var booking : s) {
-                System.out.println(booking);
-            }
+        if (booking != null) {
+            System.out.println(booking);
         } else {
-            System.out.println("No bookings remain.");
+            System.out.println("Booking could not be found.");
         }
     }
+
+
 }

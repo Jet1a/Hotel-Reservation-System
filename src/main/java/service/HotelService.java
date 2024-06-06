@@ -10,6 +10,7 @@ import repository.CustomerRepository;
 import repository.RoomRepository;
 
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 public class HotelService {
     private final CustomerRepository customerRepo;
@@ -24,7 +25,23 @@ public class HotelService {
         this.bookingRepo = bookingRepo;
     }
 
+    public static boolean validateInput(String input) {
+        return input.length() == 3 && input.matches("\\d{3}");
+    }
+
     public Customer registerCustomer(String name) {
+        if (name == null) {
+            return null;
+        } else {
+            name = name.trim();
+            if (name.isEmpty()) {
+                return null;
+            }
+        }
+        Pattern pattern = Pattern.compile("^[a-zA-Z]+(?: [a-zA-Z]+)*$");
+        if (!pattern.matcher(name).matches()) {
+            return null;
+        }
         return customerRepo.create(name);
     }
 
@@ -65,12 +82,19 @@ public class HotelService {
 
     public boolean addRoom(Room room) {
         if (room == null) return false;
+        String roomId = room.getRoomId();
+        if (roomId == null || !validateInput(roomId)) return false;
+        var existRoom = roomRepo.findByNumber(roomId);
+        if (roomRepo.getAllRooms().contains(existRoom)) return false;
         roomRepo.create(room);
         return true;
     }
 
     public boolean removeRoom(String number) {
         if (number == null) return false;
+        if (!validateInput(number)) return false;
+        var existRoom = roomRepo.findByNumber(number);
+        if (existRoom == null) return false;
         roomRepo.delete(number);
         return true;
     }
@@ -86,12 +110,21 @@ public class HotelService {
 
     public boolean reserve(Room room, Account account) {
         if (room == null || account == null) return false;
+        var rb = bookingRepo.getAllBookings().stream().anyMatch(booking -> booking.getRoom().equals(room));
+        if (rb || !room.isAvailable()) return false;
         bookingRepo.addBooking(new Booking(account, room));
         return true;
     }
 
     public boolean cancelReservation(String roomNumber) {
-        if (roomNumber == null) return false;
+        if (roomNumber == null) {
+            return false;
+        } else {
+            roomNumber = roomNumber.trim();
+            if (roomNumber.isEmpty()) {
+                return false;
+            }
+        }
         bookingRepo.deleteBooking(roomNumber);
         return true;
     }

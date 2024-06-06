@@ -1,5 +1,7 @@
 package entities;
 
+import error.ParameterException;
+
 public enum RoomType {
     SINGLE("1"),
     DOUBLE("2");
@@ -16,6 +18,6 @@ public enum RoomType {
                 return type;
             }
         }
-        throw new IllegalArgumentException();
+        throw new ParameterException(new IllegalArgumentException());
     }
 }

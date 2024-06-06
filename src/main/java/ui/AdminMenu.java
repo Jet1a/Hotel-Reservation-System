@@ -38,6 +38,9 @@ public class AdminMenu {
                         addRoom();
                         break;
                     case '5':
+                        removeRoom();
+                        break;
+                    case '6':
                         exit = true;
                         break;
                     default:
@@ -59,7 +62,8 @@ public class AdminMenu {
                 2. See all Rooms
                 3. See all Reservations
                 4. Add a Room
-                5. Back to Main Menu
+                5. Remove a Room
+                6. Back to Main Menu
                 --------------------------------------------
                 Please select a number for the menu option:
                 """);
@@ -78,10 +82,13 @@ public class AdminMenu {
         System.out.print("Enter room type: 1 for single bed, 2 for double bed: ");
         var roomType = RoomType.fromString(scanner.nextLine());
 
-        service.addRoom(new Room(roomNumber, roomType, roomPrice));
-
-        System.out.print("Would like to add another room? Y/N: ");
-        addAnotherRoom();
+        if (service.addRoom(new Room(roomNumber, roomType, roomPrice))) {
+            System.out.println("Room " + roomNumber + " added successfully");
+            System.out.print("Would like to add another room? Y/N: ");
+            addAnotherRoom();
+        } else {
+            System.out.println("Room " + roomNumber + " could not be added");
+        }
     }
 
     private void addAnotherRoom() {
@@ -107,6 +114,17 @@ public class AdminMenu {
             }
         } catch (StringIndexOutOfBoundsException ex) {
             addAnotherRoom();
+        }
+    }
+
+    public void removeRoom() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter room number: ");
+        String roomNumber = scanner.nextLine();
+        if (service.removeRoom(roomNumber)) {
+            System.out.println("Room " + roomNumber + " removed successfully");
+        } else {
+            System.out.println("Room " + roomNumber + " not exist");
         }
     }
 
@@ -142,4 +160,5 @@ public class AdminMenu {
             System.out.println("No bookings found.");
         }
     }
+
 }

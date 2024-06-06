@@ -1,5 +1,7 @@
 package entities;
 
+import error.ParameterException;
+
 import java.io.Serializable;
 
 public class Account implements Serializable {
@@ -7,6 +9,8 @@ public class Account implements Serializable {
     private final String customerId;
 
     public Account(String accountId, Customer customer) {
+        if (accountId == null || accountId.isEmpty()) throw new ParameterException("Account ID is null or empty");
+        if (customer == null) throw new ParameterException("Customer is null");
         this.accountId = accountId;
         this.customerId = customer.getId();
     }
@@ -24,6 +28,6 @@ public class Account implements Serializable {
         return "----------- Accounts -----------"
                 + "\nAccount ID: " + accountId
                 + "\nCustomer ID: " + customerId
-        + "\n------------------------------";
+                + "\n------------------------------";
     }
 }

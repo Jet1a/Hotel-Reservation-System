@@ -1,7 +1,6 @@
 package repository.memory;
 
 import entities.Booking;
-import entities.Room;
 import repository.BookingRepository;
 
 import java.util.Collection;
@@ -42,12 +41,12 @@ public class BookingMemoryRepository implements BookingRepository {
         for (Map.Entry<String, Booking> entry : bookings.entrySet()) {
             if (entry.getValue().getRoom().getRoomId().equals(roomNumber)) {
                 bookingIdToRemove = entry.getKey();
-                entry.getValue().getRoom().setAvailable(true); // Set the room to available
+                entry.getValue().getRoom().setAvailable(true);
                 break;
             }
         }
         if (bookingIdToRemove != null) {
-            bookings.remove(bookingIdToRemove); // Remove the booking entry
+            bookings.remove(bookingIdToRemove);
             return true;
         }
         return false;
