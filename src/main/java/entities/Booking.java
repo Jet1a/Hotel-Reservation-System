@@ -1,6 +1,6 @@
 package entities;
 
-import error.ParameterException;
+import exception.ParameterException;
 
 import java.io.Serializable;
 
@@ -24,9 +24,9 @@ public class Booking implements Serializable {
 
     @Override
     public String toString() {
-        return "----------- Bookings -----------"
-                + "\n" + this.account.toString()
-                + "\n" + this.room.toString()
-                + "\n---------------------------------";
+        return "\n+++++++++ Bookings +++++++++++"
+                + "\n" + this.account
+                + "\n" + this.room
+                + "\n+++++++++++++++++++++++++++++++";
     }
 }

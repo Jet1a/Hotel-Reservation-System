@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookingFileRepository implements BookingRepository, Serializable {
-    private String filename = "C:\\Users\\User\\Desktop\\project\\HotelBooking\\src\\main\\java\\data\\bookings.dat";
+    private final String filename = "C:\\Users\\User\\Desktop\\project\\HotelBooking\\src\\main\\java\\data\\bookings.dat";
     private Map<String, Booking> bookings;
     private long bookId;
 
@@ -60,23 +60,23 @@ public class BookingFileRepository implements BookingRepository, Serializable {
         if (booking == null) return false;
         var id = String.format("B%d", bookId);
         bookings.replace(id, booking);
+        saveToFile();
         return true;
     }
 
     @Override
     public boolean deleteBooking(String roomNumber) {
         if (roomNumber == null) return false;
-
         String bookingIdToRemove = null;
-        for (Map.Entry<String, Booking> entry : bookings.entrySet()) {
+        for (var entry : bookings.entrySet()) {
             if (entry.getValue().getRoom().getRoomId().equals(roomNumber)) {
                 bookingIdToRemove = entry.getKey();
-                entry.getValue().getRoom().setAvailable(true); // Set the room to available
+//                entry.getValue().getRoom().setAvailable(true);
                 break;
             }
         }
         if (bookingIdToRemove != null) {
-            bookings.remove(bookingIdToRemove); // Remove the booking entry
+            bookings.remove(bookingIdToRemove);
             saveToFile();
             return true;
         }

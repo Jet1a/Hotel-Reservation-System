@@ -1,6 +1,6 @@
 package entities;
 
-import error.ParameterException;
+import exception.ParameterException;
 
 import java.io.Serializable;
 
@@ -25,9 +25,9 @@ public class Account implements Serializable {
 
     @Override
     public String toString() {
-        return "----------- Accounts -----------"
+        return "\n--------- Accounts ---------"
                 + "\nAccount ID: " + accountId
                 + "\nCustomer ID: " + customerId
-                + "\n------------------------------";
+                + "\n----------------------------";
     }
 }

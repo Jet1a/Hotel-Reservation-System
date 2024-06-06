@@ -1,6 +1,6 @@
 package entities;
 
-import error.ParameterException;
+import exception.ParameterException;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "----------- Customer -----------"
+        return "\n----------- Customer ----------"
                 + "\nName: " + name
                 + "\nID: " + id
                 + "\n------------------------------";

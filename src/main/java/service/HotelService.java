@@ -9,6 +9,8 @@ import repository.BookingRepository;
 import repository.CustomerRepository;
 import repository.RoomRepository;
 
+import java.io.Console;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
@@ -94,7 +96,7 @@ public class HotelService {
         if (number == null) return false;
         if (!validateInput(number)) return false;
         var existRoom = roomRepo.findByNumber(number);
-        if (existRoom == null) return false;
+        if (existRoom == null || !existRoom.isAvailable()) return false;
         roomRepo.delete(number);
         return true;
     }
@@ -113,6 +115,8 @@ public class HotelService {
         var rb = bookingRepo.getAllBookings().stream().anyMatch(booking -> booking.getRoom().equals(room));
         if (rb || !room.isAvailable()) return false;
         bookingRepo.addBooking(new Booking(account, room));
+//        room.setAvailable(false);
+        roomRepo.update(room);
         return true;
     }
 
@@ -125,7 +129,11 @@ public class HotelService {
                 return false;
             }
         }
+        var room = roomRepo.findByNumber(roomNumber);
+        if (room == null) return false;
         bookingRepo.deleteBooking(roomNumber);
+        room.setAvailable(true);
+        roomRepo.update(room);
         return true;
     }
 
@@ -138,4 +146,20 @@ public class HotelService {
         return bookingRepo.getAllBookings();
     }
 
+    public boolean adminAuthentication() {
+        Console console = System.console();
+        if (console == null) return false;
+        String adminPassword = "ADMIN12345";
+        char[] passwordArr = console.readPassword("Enter admin password: ");
+        String password = new String(passwordArr);
+        if (password.equals(adminPassword)) {
+            String showPassword = console.readLine("Do you want to show password? (Y/N) ");
+            if ("Y".equalsIgnoreCase(showPassword)) {
+                System.out.println("Password entered: " + password);
+            }
+            Arrays.fill(passwordArr, ' ');
+            return true;
+        }
+        return false;
+    }
 }

@@ -27,7 +27,8 @@ public class RoomMemoryRepository implements RoomRepository {
     public boolean update(Room room) {
         if (room == null) return false;
         var number = room.getRoomId();
-        rooms.replace(number, room);
+        if (!rooms.containsKey(number)) return false;
+        rooms.put(number, room);
         return true;
     }
 

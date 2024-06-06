@@ -1,6 +1,6 @@
 package entities;
 
-import error.ParameterException;
+import exception.ParameterException;
 
 import java.io.Serializable;
 
@@ -50,11 +50,11 @@ public class Room implements Serializable {
 
     @Override
     public String toString() {
-        return "----------- Room -----------"
+        return "\n----------- Room -----------"
                 + "\nRoomId: " + roomId
                 + "\nRoomType: " + roomType
                 + "\nPrice: " + price
                 + "\nAvailable: " + availableString()
-                + "\n---------------------------";
+                + "\n----------------------------";
     }
 }

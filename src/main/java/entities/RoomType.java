@@ -1,8 +1,10 @@
 package entities;
 
-import error.ParameterException;
+import exception.ParameterException;
 
-public enum RoomType {
+import java.io.Serializable;
+
+public enum RoomType implements Serializable {
     SINGLE("1"),
     DOUBLE("2");
 

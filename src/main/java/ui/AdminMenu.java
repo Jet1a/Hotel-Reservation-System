@@ -16,6 +16,7 @@ public class AdminMenu {
 
     public void mainMenu() {
         Scanner scanner = new Scanner(System.in);
+//        if (!service.adminAuthentication()) return;
         boolean exit = false;
         while (!exit) {
             printAdminUI();
@@ -55,6 +56,7 @@ public class AdminMenu {
 
     public void printAdminUI() {
         System.out.print("""
+                                
                 ********************************************
                 Admin Menu
                 --------------------------------------------
@@ -66,6 +68,7 @@ public class AdminMenu {
                 6. Back to Main Menu
                 --------------------------------------------
                 Please select a number for the menu option:
+                                
                 """);
     }
 
@@ -117,14 +120,14 @@ public class AdminMenu {
         }
     }
 
-    public void removeRoom() {
+    private void removeRoom() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter room number: ");
         String roomNumber = scanner.nextLine();
         if (service.removeRoom(roomNumber)) {
-            System.out.println("Room " + roomNumber + " removed successfully");
+            System.out.println("Room " + roomNumber + " removed successfully.");
         } else {
-            System.out.println("Room " + roomNumber + " not exist");
+            System.out.println("Room " + roomNumber + " not exist or it has been reserved.");
         }
     }
 

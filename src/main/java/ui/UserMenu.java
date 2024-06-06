@@ -15,6 +15,7 @@ public class UserMenu {
 
     public static void printUserUI() {
         System.out.print("""
+                                
                 ********************************************
                 User Menu
                 --------------------------------------------
@@ -27,6 +28,7 @@ public class UserMenu {
                 7. Back to Main Menu
                 --------------------------------------------
                 Please select a number for the menu option:
+                                
                 """);
     }
 
@@ -118,9 +120,9 @@ public class UserMenu {
         System.out.print("Enter room number: ");
         String roomNumber = scanner.nextLine();
         if (service.cancelReservation(roomNumber)) {
-            System.out.println("Reservation has been cancelled.");
+            System.out.println("Reservation " + roomNumber + " has been cancelled.");
         } else {
-            System.out.println("Not found a reservation.");
+            System.out.println("No reservation found.");
         }
     }
 

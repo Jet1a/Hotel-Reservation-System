@@ -1,4 +1,4 @@
-package error;
+package exception;
 
 public class ParameterException extends RuntimeException {
     public ParameterException() {
@@ -13,3 +13,4 @@ public class ParameterException extends RuntimeException {
     public ParameterException(String message, Throwable cause) {
     }
 }
+

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RoomFileRepository implements RoomRepository, Serializable {
-    private String filename = "C:\\Users\\User\\Desktop\\project\\HotelBooking\\src\\main\\java\\data\\rooms.dat";
+    private final String filename = "C:\\Users\\User\\Desktop\\project\\HotelBooking\\src\\main\\java\\data\\rooms.dat";
     private Map<String, Room> rooms;
 
     public RoomFileRepository() {
@@ -52,7 +52,9 @@ public class RoomFileRepository implements RoomRepository, Serializable {
     public boolean update(Room room) {
         if (room == null) return false;
         var number = room.getRoomId();
-        rooms.replace(number, room);
+        if (!rooms.containsKey(number)) return false;
+        rooms.put(number, room);
+        saveToFile();
         return true;
     }
 
