@@ -3,6 +3,7 @@ package repository;
 import entities.Room;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 
 public interface RoomRepository {
@@ -15,4 +16,6 @@ public interface RoomRepository {
     Room findByNumber(String number);
 
     Collection<Room> getAllRooms();
+
+    Stream<Room> getAvailableRooms();
 }

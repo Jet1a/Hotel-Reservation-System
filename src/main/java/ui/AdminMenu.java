@@ -2,6 +2,8 @@ package ui;
 
 import entities.Room;
 import entities.RoomType;
+import exception.IllRoomIdArgument;
+import exception.ParameterException;
 import service.HotelService;
 
 import java.util.Scanner;
@@ -16,7 +18,7 @@ public class AdminMenu {
 
     public void mainMenu() {
         Scanner scanner = new Scanner(System.in);
-//        if (!service.adminAuthentication()) return;
+        if (!service.adminAuthentication()) return;
         boolean exit = false;
         while (!exit) {
             printAdminUI();
@@ -74,7 +76,7 @@ public class AdminMenu {
 
     private void addRoom() {
         Scanner scanner = new Scanner(System.in);
-
+        System.out.println("room number must only be number with 3 digits");
         System.out.print("Enter room number: ");
         String roomNumber = scanner.nextLine();
 
@@ -82,16 +84,26 @@ public class AdminMenu {
         var roomPrice = scanner.nextDouble();
         scanner.nextLine();
 
-        System.out.print("Enter room type: 1 for single bed, 2 for double bed: ");
-        var roomType = RoomType.fromString(scanner.nextLine());
-
-        if (service.addRoom(new Room(roomNumber, roomType, roomPrice))) {
-            System.out.println("Room " + roomNumber + " added successfully");
-            System.out.print("Would like to add another room? Y/N: ");
-            addAnotherRoom();
-        } else {
+        System.out.println("Enter room type\n   1) for single bed\n   2) for double bed");
+        System.out.print("Choose your choice[1,2]: ");
+        try {
+            var roomType = RoomType.fromString(scanner.nextLine());
+            if (service.addRoom(new Room(roomNumber, roomType, roomPrice))) {
+                System.out.println("Room " + roomNumber + " added successfully");
+                System.out.print("Would like to add another room? Y/N: ");
+                addAnotherRoom();
+            } else {
+                System.out.println("Room " + roomNumber + " could not be added");
+            }
+        } catch (NullPointerException e) {
             System.out.println("Room " + roomNumber + " could not be added");
+            System.out.println("Please enter correct room number");
+        } catch (ParameterException e) {
+            System.out.println("Please enter correct price");
+        } catch (IllegalArgumentException ee) {
+            System.out.println("Please enter select room type (1,2)");
         }
+
     }
 
     private void addAnotherRoom() {
@@ -122,13 +134,21 @@ public class AdminMenu {
 
     private void removeRoom() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("room number must only be number with 3 digits.");
         System.out.print("Enter room number: ");
         String roomNumber = scanner.nextLine();
-        if (service.removeRoom(roomNumber)) {
-            System.out.println("Room " + roomNumber + " removed successfully.");
-        } else {
-            System.out.println("Room " + roomNumber + " not exist or it has been reserved.");
+        try {
+            if (service.removeRoom(roomNumber)) {
+                System.out.println("Room " + roomNumber + " removed successfully.");
+            } else {
+                System.out.println("Room number " + roomNumber + " have been reserving by customer");
+                System.out.println("Cannot remove room number " + roomNumber + ".");
+            }
+        } catch (IllRoomIdArgument | NullPointerException e) {
+            System.out.println("Please enter correct room number");
         }
+
+
     }
 
     public void allCustomers() {

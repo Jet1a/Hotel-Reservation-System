@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CustomerFileRepository implements CustomerRepository, Serializable {
-    private final String filename = "C:\\Users\\User\\Desktop\\project\\HotelBooking\\src\\main\\java\\data\\customers.dat";
+    private final String filename = "customers.dat";
     private Map<String, Customer> customers;
     private long nextId;
 

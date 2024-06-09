@@ -4,6 +4,10 @@ import repository.file.AccountFileRepository;
 import repository.file.BookingFileRepository;
 import repository.file.CustomerFileRepository;
 import repository.file.RoomFileRepository;
+import repository.jdbc.AccountJDBC;
+import repository.jdbc.BookingJDBC;
+import repository.jdbc.CustomerJDBC;
+import repository.jdbc.RoomJDBC;
 import repository.memory.AccountMemoryRepository;
 import repository.memory.BookingMemoryRepository;
 import repository.memory.CustomerMemoryRepository;
@@ -16,6 +20,16 @@ public class MainMenu {
     private final HotelService service;
     private final UserMenu userMenu;
     private final AdminMenu adminMenu;
+
+    public MainMenu() {
+        service = new HotelService(
+                new CustomerJDBC(),
+                new AccountJDBC(),
+                new RoomJDBC(),
+                new BookingJDBC());
+        userMenu = new UserMenu(service);
+        adminMenu = new AdminMenu(service);
+    }
 
     public MainMenu(boolean fromFile) {
         if (fromFile) {

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccountFileRepository implements AccountRepository, Serializable {
-    private final String filename = "C:\\Users\\User\\Desktop\\project\\HotelBooking\\src\\main\\java\\data\\accounts.dat";
+    private final String filename = "accounts.dat";
     private Map<String, Account> accounts;
     private long nextId = 1;
 

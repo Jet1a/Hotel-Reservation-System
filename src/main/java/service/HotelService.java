@@ -4,6 +4,10 @@ import entities.Account;
 import entities.Booking;
 import entities.Customer;
 import entities.Room;
+import exception.AlreadyHaveRoomNumber;
+import exception.IllRoomIdArgument;
+import exception.NullCollection;
+import exception.ParameterException;
 import repository.AccountRepository;
 import repository.BookingRepository;
 import repository.CustomerRepository;
@@ -13,6 +17,7 @@ import java.io.Console;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class HotelService {
     private final CustomerRepository customerRepo;
@@ -27,8 +32,9 @@ public class HotelService {
         this.bookingRepo = bookingRepo;
     }
 
-    public static boolean validateInput(String input) {
-        return input.length() == 3 && input.matches("\\d{3}");
+    public static void validateInput(String input) {
+        boolean validInput = input.length() == 3 && input.matches("\\d{3}");
+        if (!validInput) throw new IllRoomIdArgument();
     }
 
     public Customer registerCustomer(String name) {
@@ -83,20 +89,31 @@ public class HotelService {
     }
 
     public boolean addRoom(Room room) {
-        if (room == null) return false;
+        if (room == null) throw new NullPointerException();
         String roomId = room.getRoomId();
-        if (roomId == null || !validateInput(roomId)) return false;
-        var existRoom = roomRepo.findByNumber(roomId);
-        if (roomRepo.getAllRooms().contains(existRoom)) return false;
-        roomRepo.create(room);
+        if (roomId == null) throw new NullPointerException();
+        try {
+            validateInput(roomId);
+            roomRepo.create(room);
+        } catch (IllRoomIdArgument e) {
+            System.out.println("Please enter correct room number");
+            return false;
+        } catch (ParameterException e) {
+            System.out.println("Please enter correct room information");
+            return false;
+        } catch (AlreadyHaveRoomNumber e) {
+            System.out.println("Room number " + room.getRoomId() + " already exists");
+            return false;
+        }
         return true;
     }
 
     public boolean removeRoom(String number) {
-        if (number == null) return false;
-        if (!validateInput(number)) return false;
+        if (number == null) throw new IllRoomIdArgument();
+        validateInput(number);
         var existRoom = roomRepo.findByNumber(number);
-        if (existRoom == null || !existRoom.isAvailable()) return false;
+        if (existRoom == null) throw new NullPointerException();
+        if (!existRoom.isAvailable()) return false;
         roomRepo.delete(number);
         return true;
     }
@@ -111,17 +128,24 @@ public class HotelService {
     }
 
     public boolean reserve(Room room, Account account) {
-        if (room == null || account == null) return false;
+        if (room == null || !room.isAvailable()) {
+            throw new IllRoomIdArgument();
+        }
+        if (account == null) {
+            throw new NullPointerException();
+        }
         var rb = bookingRepo.getAllBookings().stream().anyMatch(booking -> booking.getRoom().equals(room));
-        if (rb || !room.isAvailable()) return false;
+        if (rb) {
+            return false;
+        }
         bookingRepo.addBooking(new Booking(account, room));
-//        room.setAvailable(false);
+        room.setAvailable(false);
         roomRepo.update(room);
         return true;
     }
 
-    public boolean cancelReservation(String roomNumber) {
-        if (roomNumber == null) {
+    public boolean cancelReservation(String roomNumber, String accountId) {
+        if (accountId == null || roomNumber == null) {
             return false;
         } else {
             roomNumber = roomNumber.trim();
@@ -130,7 +154,10 @@ public class HotelService {
             }
         }
         var room = roomRepo.findByNumber(roomNumber);
-        if (room == null) return false;
+        if (room == null) throw new IllRoomIdArgument();
+        if (getBookingId(room.getRoomId()) == null) throw new IllRoomIdArgument();
+        Booking booking = bookingRepo.getAllBookings().stream().filter(a -> a.getAccount().getAccountId().equals(accountId)).findFirst().orElse(null);
+        if (booking == null) throw new NullPointerException();
         bookingRepo.deleteBooking(roomNumber);
         room.setAvailable(true);
         roomRepo.update(room);
@@ -144,6 +171,24 @@ public class HotelService {
 
     public Collection<Booking> getAllBookings() {
         return bookingRepo.getAllBookings();
+    }
+
+    public Collection<Booking> getAllBookingsOwnedByAccount(String accountId) {
+        if (accountId == null) throw new ParameterException();
+        if (accountRepo.getAccount(accountId) == null) throw new NullPointerException();
+        Collection<Booking> bookings = bookingRepo.getAllBookingsOwnedByAccount(accountId);
+        if (bookings == null) throw new NullCollection();
+        return bookings;
+    }
+
+    public Stream<Room> getAllAvailableRooms() {
+        if (roomRepo.getAllRooms().isEmpty()) return Stream.empty();
+        return roomRepo.getAllRooms().stream();
+    }
+
+    public String getBookingId(String roomNumber) {
+        if (roomNumber == null) return null;
+        return bookingRepo.getBookingId(roomNumber);
     }
 
     public boolean adminAuthentication() {
@@ -162,4 +207,5 @@ public class HotelService {
         }
         return false;
     }
+
 }

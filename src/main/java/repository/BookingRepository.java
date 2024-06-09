@@ -11,8 +11,13 @@ public interface BookingRepository {
 
     boolean deleteBooking(String roomNumber);
 
+    String getBookingId(String roomNumber);
+
     Booking getBooking(String id);
 
     Collection<Booking> getAllBookings();
+
+    Collection<Booking> getAllBookingsOwnedByAccount(String accountId);
+
 
 }

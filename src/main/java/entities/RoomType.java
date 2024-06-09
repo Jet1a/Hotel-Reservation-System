@@ -1,7 +1,5 @@
 package entities;
 
-import exception.ParameterException;
-
 import java.io.Serializable;
 
 public enum RoomType implements Serializable {
@@ -20,6 +18,6 @@ public enum RoomType implements Serializable {
                 return type;
             }
         }
-        throw new ParameterException(new IllegalArgumentException());
+        throw new IllegalArgumentException();
     }
 }

@@ -7,9 +7,10 @@ import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class RoomFileRepository implements RoomRepository, Serializable {
-    private final String filename = "C:\\Users\\User\\Desktop\\project\\HotelBooking\\src\\main\\java\\data\\rooms.dat";
+    private final String filename = "rooms.dat";
     private Map<String, Room> rooms;
 
     public RoomFileRepository() {
@@ -76,5 +77,10 @@ public class RoomFileRepository implements RoomRepository, Serializable {
     @Override
     public Collection<Room> getAllRooms() {
         return rooms.values();
+    }
+
+    @Override
+    public Stream<Room> getAvailableRooms() {
+        return rooms.values().stream().filter(room -> !room.isAvailable());
     }
 }

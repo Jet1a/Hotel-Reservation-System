@@ -6,6 +6,7 @@ import repository.RoomRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class RoomMemoryRepository implements RoomRepository {
     private final Map<String, Room> rooms;
@@ -49,5 +50,10 @@ public class RoomMemoryRepository implements RoomRepository {
     @Override
     public Collection<Room> getAllRooms() {
         return rooms.values();
+    }
+
+    @Override
+    public Stream<Room> getAvailableRooms() {
+        return rooms.values().stream().filter(room -> !room.isAvailable());
     }
 }

@@ -1,6 +1,8 @@
 package ui;
 
 import entities.Customer;
+import exception.IllRoomIdArgument;
+import exception.NullCollection;
 import service.HotelService;
 
 import java.util.Scanner;
@@ -25,7 +27,8 @@ public class UserMenu {
                 4. Reserve Room
                 5. Cancel Reservation
                 6. See my Bookings
-                7. Back to Main Menu
+                7. See my All Bookings
+                8. Back to Main Menu
                 --------------------------------------------
                 Please select a number for the menu option:
                                 
@@ -63,6 +66,9 @@ public class UserMenu {
                         myReservation();
                         break;
                     case '7':
+                        myAllReservation(null);
+                        break;
+                    case '8':
                         exit = true;
                         break;
                     default:
@@ -108,21 +114,41 @@ public class UserMenu {
         String roomNumber = scanner.nextLine();
         System.out.print("Enter account id: ");
         String accountId = scanner.nextLine();
-        if (service.reserve(service.findByNumber(roomNumber), service.getAccount(accountId))) {
-            System.out.println("Reserved room " + roomNumber + " successfully.");
-        } else {
-            System.out.println("Reserved room " + roomNumber + " failed.");
+        try {
+            if (service.reserve(service.findByNumber(roomNumber), service.getAccount(accountId))) {
+                System.out.println("Reserved room " + roomNumber + " successfully.");
+                var bookingId = service.getBookingId(roomNumber);
+                System.out.println("Booking ID: " + bookingId);
+            } else {
+                System.out.println("Room number " + roomNumber + " is not available");
+            }
+        } catch (IllRoomIdArgument e) {
+            System.out.println("Please enter correct room number");
+        } catch (NullPointerException e) {
+            System.out.println("Please enter correct account id");
         }
     }
 
     public void cancelReservation() {
         Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter account id: ");
+        String accountId = scanner.nextLine();
+        System.out.println("\n====================");
+        System.out.println("All your reservation");
+        myAllReservation(accountId);
+        System.out.println();
         System.out.print("Enter room number: ");
         String roomNumber = scanner.nextLine();
-        if (service.cancelReservation(roomNumber)) {
-            System.out.println("Reservation " + roomNumber + " has been cancelled.");
-        } else {
-            System.out.println("No reservation found.");
+        try {
+            if (service.cancelReservation(roomNumber, accountId)) {
+                System.out.println("Reservation " + roomNumber + " has been canceled.");
+            } else {
+                System.out.println("No reservation found.");
+            }
+        } catch (IllRoomIdArgument e) {
+            System.out.println("No " + roomNumber + " room booked");
+        } catch (NullPointerException e) {
+            System.out.print("Invalid account id");
         }
     }
 
@@ -149,5 +175,39 @@ public class UserMenu {
         }
     }
 
-
+    public void myAllReservation(String accountId) {
+        while (true) {
+            try {
+                if (accountId == null) {
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.print("Enter account id (enter -1 for exit): ");
+                    accountId = scanner.nextLine();
+                    if (accountId.equals("-1")) {
+                        mainMenu();
+                        break;
+                    }
+                }
+                var bookings = service.getAllBookingsOwnedByAccount(accountId);
+                if (bookings.isEmpty()) {
+                    System.out.println("Booking could not be found.");
+                } else {
+                    for (var booking : bookings) {
+                        System.out.println(booking);
+                    }
+                }
+                break;
+            } catch (NullPointerException e) {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("account id " + accountId + " doesn't exist, please enter correct account id");
+                System.out.print("Enter account id (enter -1 for exit): ");
+                accountId = scanner.nextLine();
+                if (accountId.equals("-1")) {
+                    mainMenu();
+                    break;
+                }
+            } catch (NullCollection e) {
+                System.out.println("No booking reserved by " + accountId);
+            }
+        }
+    }
 }

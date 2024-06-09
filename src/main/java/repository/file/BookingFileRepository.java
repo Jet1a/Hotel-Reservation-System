@@ -7,9 +7,10 @@ import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BookingFileRepository implements BookingRepository, Serializable {
-    private final String filename = "C:\\Users\\User\\Desktop\\project\\HotelBooking\\src\\main\\java\\data\\bookings.dat";
+    private final String filename = "bookings.dat";
     private Map<String, Booking> bookings;
     private long bookId;
 
@@ -71,7 +72,6 @@ public class BookingFileRepository implements BookingRepository, Serializable {
         for (var entry : bookings.entrySet()) {
             if (entry.getValue().getRoom().getRoomId().equals(roomNumber)) {
                 bookingIdToRemove = entry.getKey();
-//                entry.getValue().getRoom().setAvailable(true);
                 break;
             }
         }
@@ -90,7 +90,26 @@ public class BookingFileRepository implements BookingRepository, Serializable {
     }
 
     @Override
+    public String getBookingId(String roomNumber) {
+        if (roomNumber == null) return null;
+        for (var entry : bookings.entrySet()) {
+            if (entry.getValue().getRoom().getRoomId().equals(roomNumber)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Collection<Booking> getAllBookings() {
         return bookings.values();
+    }
+
+    @Override
+    public Collection<Booking> getAllBookingsOwnedByAccount(String accountId) {
+        return bookings.values()
+                .stream()
+                .filter(a -> a.getAccount().getAccountId().equals(accountId))
+                .collect(Collectors.toList());
     }
 }
